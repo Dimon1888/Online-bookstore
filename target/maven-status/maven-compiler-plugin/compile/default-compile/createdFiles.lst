@@ -1,0 +1,6 @@
+com\bookstore\repository\BookRepositoryImpl.class
+com\bookstore\entity\Book.class
+com\bookstore\service\BookService.class
+com\bookstore\Main.class
+com\bookstore\repository\BookRepository.class
+com\bookstore\service\BookServiceImpl.class
