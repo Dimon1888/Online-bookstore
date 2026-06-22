@@ -1,4 +1,4 @@
-package com.bookstore.entity;
+package com.example.demo.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,8 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "books")
 public class Book {
     @Id
@@ -32,68 +36,9 @@ public class Book {
 
     private String coverImage;
 
-    // Конструктор за замовчуванням (обов'язковий для JPA)
     public Book() {
     }
 
-    // Гетери та Сетери
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCoverImage() {
-        return coverImage;
-    }
-
-    public void setCoverImage(String coverImage) {
-        this.coverImage = coverImage;
-    }
-
-    // Безпечний equals для JPA (порівняння за id)
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -103,16 +48,14 @@ public class Book {
             return false;
         }
         Book book = (Book) o;
-        return id != null && Objects.equals(id, book.id);
+        return Objects.equals(isbn, book.isbn);
     }
 
-    // Стабільний hashCode для JPA
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hashCode(isbn);
     }
 
-    // Метод toString
     @Override
     public String toString() {
         return "Book{"
