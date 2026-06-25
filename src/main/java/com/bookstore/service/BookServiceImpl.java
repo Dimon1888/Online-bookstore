@@ -3,6 +3,7 @@ package com.bookstore.service;
 import com.bookstore.entity.Book;
 import com.bookstore.repository.BookRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +20,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findAll() {
         return bookRepository.findAll();
+    }
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        return bookRepository.findById(id);
     }
 }
