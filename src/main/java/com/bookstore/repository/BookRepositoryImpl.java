@@ -1,39 +1,38 @@
 package com.bookstore.repository;
 
 import com.bookstore.entity.Book;
+import com.bookstore.exception.DataProcessingException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
 public class BookRepositoryImpl implements BookRepository {
-    private final EntityManagerFactory entityManagerFactory;
+    private final SessionFactory sessionFactory;
 
     @Override
     public Book save(Book book) {
         EntityTransaction transaction = null;
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+        try (EntityManager entityManager = sessionFactory.createEntityManager()) {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
             Book savedBook;
-            // Перевіряємо, чи книга вже існує в базі даних
             if (book.getId() == null) {
-                // Якщо ID немає — це нова книга, створюємо новий рядок (INSERT)
                 entityManager.persist(book);
                 savedBook = book;
             } else {
-                // Якщо ID є — книга існуюча, оновлюємо дані у базі (UPDATE)
                 savedBook = entityManager.merge(book);
             }
 
             transaction.commit();
-            return savedBook; // Повертаємо керовану JPA копію об'єкта
+            return savedBook;
         } catch (RuntimeException e) {
             // Безпечний відкат транзакції з перевіркою активності з'єднання
             if (transaction != null && transaction.isActive()) {
@@ -50,14 +49,16 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
-            return entityManager.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("SELECT b FROM Book b", Book.class).getResultList();
+        } catch (Exception e) {
+            throw new DataProcessingException("Cannot find all books", e);
         }
     }
 
     @Override
     public Optional<Book> findById(Long id) {
-        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+        try (EntityManager entityManager = sessionFactory.createEntityManager()) {
             Book book = entityManager.find(Book.class, id);
             return Optional.ofNullable(book);
         }
