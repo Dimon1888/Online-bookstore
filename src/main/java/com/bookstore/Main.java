@@ -38,7 +38,7 @@ public class Main {
 
             if (foundBookOpt.isPresent()) {
                 Book foundBook = foundBookOpt.get();
-                System.out.println("Книгу знайдено: " + foundBook.getTitle());
+                System.out.println("Book found: " + foundBook.getTitle());
 
                 System.out.println("\n3. Testing price updates for books...");
                 foundBook.setPrice(BigDecimal.valueOf(1250.50));
